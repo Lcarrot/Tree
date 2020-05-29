@@ -48,7 +48,7 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     private Node addElement(Node currentNode, T element) {
-        if (currentNode == null) return null;
+        if (currentNode == null) return new Node(element);
         if (element.compareTo(currentNode.element) < 0) currentNode.setLeft(addElement(currentNode.left, element));
         else if (element.compareTo(currentNode.element) > 0) currentNode.setRight(addElement(currentNode.right, element));
         return currentNode;
@@ -61,9 +61,8 @@ public class BinaryTree<T extends Comparable<T>> {
     private Node deleteElement(Node currentNode, T element) {
         if (currentNode == null) return null;
         if (element.compareTo(currentNode.element) == 0) {
-            if (!(currentNode.hasLeft() || currentNode.hasRight())) return null;
+            if (!currentNode.hasLeft() && !currentNode.hasRight()) return null;
             if (!currentNode.hasRight()) return currentNode.left;
-
             if (!currentNode.hasLeft()) return currentNode.right;
             T smallestElement = findTheSmallestElement(currentNode.right);
             currentNode.setElement(smallestElement);
@@ -79,7 +78,7 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     private T findTheSmallestElement(Node currentNode) {
-        return !currentNode.hasLeft() ? currentNode.element : findTheSmallestElement(currentNode.left);
+        return currentNode.hasLeft() ? findTheSmallestElement(currentNode.left): currentNode.element;
     }
 
     public LinkedList<T> BFS() {
@@ -88,7 +87,7 @@ public class BinaryTree<T extends Comparable<T>> {
         }
         Queue<Node> queue = new LinkedList<>();
         queue.add(root);
-        LinkedList<T> answer = new LinkedList<>();
+        answer = new LinkedList<>();
         while (!queue.isEmpty()) {
             Node currentNode = queue.remove();
             answer.add(currentNode.element);
